@@ -111,15 +111,15 @@ $precio_maximo = $fila_caro['max_precio'] ? $fila_caro['max_precio'] : 0;
             transition: background 0.3s; 
         }
         
-        .modulo:hover { background: #2563eb; }
+        .modulo:hover { opacity: 0.9; }
     </style>
 </head>
 <body>
 
     <!-- Barra Superior -->
     <div class="navbar">
-        <h1>Bienvenido, <?php echo $_SESSION['nombre']; ?>
-            <span style="font-size: 14px; color: #94a3b8;">(Rol: <?php echo $_SESSION['rol']; ?>)</span>
+        <h1>Bienvenido, <?php echo htmlspecialchars($_SESSION['nombre']); ?>
+            <span style="font-size: 14px; color: #94a3b8;">(Rol: <?php echo htmlspecialchars($_SESSION['rol']); ?>)</span>
         </h1>
         <a href="logout.php" class="btn-salir">Cerrar Sesión</a>
     </div>
@@ -148,7 +148,7 @@ $precio_maximo = $fila_caro['max_precio'] ? $fila_caro['max_precio'] : 0;
     <h2 style="color: #334155;">Módulos del Sistema</h2>
     <div class="menu-modulos">
         <a href="inventario.php" class="modulo">📦 Ir al Catálogo de Inventario</a>
-        <a href="#" class="modulo" style="background:#64748b;">🛒 Punto de Venta (Próximamente)</a>
+        <a href="proveedores.php" class="modulo" style="background:#8b5cf6;">🚚 Módulo de Proveedores</a>
     </div>
 
 </body>
