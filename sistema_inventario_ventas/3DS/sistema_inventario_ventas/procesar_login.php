@@ -33,7 +33,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $_SESSION['nombre'] = $row['nombre_completo'];
                 $_SESSION['rol'] = $row['rol'];
 
-                header("Location: test_dashboard.php");
+                // Redirección actualizada al Dashboard interactivo
+                header("Location: dashboard.php");
                 exit();
 
             } else {
