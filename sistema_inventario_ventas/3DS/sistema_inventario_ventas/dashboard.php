@@ -96,12 +96,13 @@ $precio_maximo = $fila_caro['max_precio'] ? $fila_caro['max_precio'] : 0;
         }
 
         /* Menú de accesos rápidos */
-        .menu-modulos { display: flex; gap: 20px; }
+        .menu-modulos { display: flex; gap: 20px; flex-wrap: wrap; }
         
         .modulo { 
             background: #3b82f6; 
             color: white; 
             flex: 1; 
+            min-width: 200px;
             padding: 20px; 
             text-align: center; 
             border-radius: 8px; 
@@ -149,6 +150,7 @@ $precio_maximo = $fila_caro['max_precio'] ? $fila_caro['max_precio'] : 0;
     <div class="menu-modulos">
         <a href="inventario.php" class="modulo">📦 Ir al Catálogo de Inventario</a>
         <a href="proveedores.php" class="modulo" style="background:#8b5cf6;">🚚 Módulo de Proveedores</a>
+        <a href="nueva_compra.php" class="modulo" style="background:#10b981;">📥 Registrar Ingreso de Mercadería</a>
     </div>
 
 </body>
