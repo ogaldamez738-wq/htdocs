@@ -85,8 +85,8 @@ $resultado = $conn->query($sql);
         </div>
     </div>
 
-    <!-- Acciones -->
-    <a href="#" style="background: #3b82f6; color: white; padding: 10px; text-decoration: none; border-radius: 5px; font-weight: bold;">+ Nuevo Proveedor</a>
+    <!-- Enlace actualizado a nuevo_proveedor.php -->
+    <a href="nuevo_proveedor.php" style="background: #3b82f6; color: white; padding: 10px; text-decoration: none; border-radius: 5px; font-weight: bold;">+ Nuevo Proveedor</a>
 
     <table>
         <thead>
