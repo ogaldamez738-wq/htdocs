@@ -58,6 +58,21 @@ body{
     font-weight:bold;
 }
 
+.btn-editar{
+    background-color: #f59e0b;
+    color: white;
+    padding: 6px 12px;
+    text-decoration: none;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: bold;
+    margin-right: 5px;
+}
+
+.btn-editar:hover{
+    background-color: #d97706;
+}
+
 .btn-eliminar{
     background:#ef4444;
     color:white;
@@ -109,7 +124,7 @@ Usuario:
 <strong><?php echo $_SESSION['nombre']; ?></strong>
 
 <a href="nuevo_producto.php"
-style="background:#3b82f6;color:white;padding:10px;text-decoration:none;border-radius:5px;">
+style="background:#3b82f6;color:white;padding:10px;text-decoration:none;border-radius:5px;margin-left:10px;">
 + Nuevo Producto
 </a>
 
@@ -170,12 +185,16 @@ $<?php echo number_format($fila['precio'],2); ?>
 
 <td>
 
+<!-- BOTÓN EDITAR -->
+<a href="editar_producto.php?id=<?php echo $fila['id']; ?>" class="btn-editar">
+✏️ Editar
+</a>
+
+<!-- BOTÓN ELIMINAR -->
 <a href="eliminar_producto.php?id=<?php echo $fila['id']; ?>"
 class="btn-eliminar"
 onclick="return confirm('¿Estás seguro de eliminar el producto: <?php echo $fila['nombre_producto']; ?>?');">
-
 🗑️ Eliminar
-
 </a>
 
 </td>
