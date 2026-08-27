@@ -8,12 +8,35 @@ if (!isset($_SESSION['user_id'])) {
 
 require_once 'conexion.php';
 
-$sql = "SELECT p.id, p.nombre_producto, c.nombre_categoria, p.stock, p.precio
-        FROM productos p
-        INNER JOIN categorias c ON p.categoria_id = c.id
-        ORDER BY p.id ASC";
+// 1. Verificamos si el usuario envió un término en la barra de búsqueda
+$busqueda = isset($_GET['buscar']) ? trim($_GET['buscar']) : '';
 
-$resultado = $conn->query($sql);
+if ($busqueda != '') {
+    // 2. Consulta con filtro LIKE para nombre de producto o categoría usando Sentencias Preparadas
+    $sql = "SELECT p.id, p.nombre_producto, c.nombre_categoria, p.stock, p.precio
+            FROM productos p
+            INNER JOIN categorias c ON p.categoria_id = c.id
+            WHERE p.nombre_producto LIKE ? OR c.nombre_categoria LIKE ?
+            ORDER BY p.id ASC";
+
+    $stmt = $conn->prepare($sql);
+
+    // Concatenamos los comodines % al texto enviado por el usuario
+    $param_busqueda = "%" . $busqueda . "%";
+
+    // Vinculamos el parámetro dos veces (para nombre y para categoría)
+    $stmt->bind_param("ss", $param_busqueda, $param_busqueda);
+    $stmt->execute();
+    $resultado = $stmt->get_result();
+    $stmt->close();
+} else {
+    // 3. Consulta general sin filtro para mostrar todo el inventario
+    $sql = "SELECT p.id, p.nombre_producto, c.nombre_categoria, p.stock, p.precio
+            FROM productos p
+            INNER JOIN categorias c ON p.categoria_id = c.id
+            ORDER BY p.id ASC";
+    $resultado = $conn->query($sql);
+}
 ?>
 
 <!DOCTYPE html>
@@ -121,14 +144,29 @@ th{
 <div>
 
 Usuario:
-<strong><?php echo $_SESSION['nombre']; ?></strong>
+<strong><?php echo htmlspecialchars($_SESSION['nombre']); ?></strong>
 
-<a href="nuevo_producto.php"
-style="background:#3b82f6;color:white;padding:10px;text-decoration:none;border-radius:5px;margin-left:10px;">
-+ Nuevo Producto
+<a href="dashboard.php" style="background:#64748b;color:white;padding:10px;text-decoration:none;border-radius:5px;margin-left:10px;font-weight:bold;">
+🏠 Dashboard
 </a>
 
 </div>
+
+</div>
+
+<!-- Barra de Controles: Botón Nuevo + Formulario de Búsqueda -->
+<div style="margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;">
+
+<a href="nuevo_producto.php" style="background: #3b82f6; color: white; padding: 10px; text-decoration: none; border-radius: 5px; font-weight: bold;">+ Nuevo Producto</a>
+
+<!-- Formulario de Búsqueda (Método GET) -->
+<form method="GET" style="display: flex; gap: 10px;">
+    <input type="text" name="buscar" placeholder="Buscar producto o categoría..."
+           value="<?php echo isset($_GET['buscar']) ? htmlspecialchars($_GET['buscar']) : ''; ?>"
+           style="padding: 8px; border: 1px solid #cbd5e1; border-radius: 4px; width: 250px;">
+    <button type="submit" style="background: #10b981; color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer; font-weight: bold;">🔍 Buscar</button>
+    <a href="inventario.php" style="background: #64748b; color: white; padding: 8px 15px; text-decoration: none; border-radius: 4px; font-weight: bold;">Limpiar</a>
+</form>
 
 </div>
 
@@ -168,11 +206,11 @@ if($resultado->num_rows > 0){
 </td>
 
 <td>
-<?php echo $fila['nombre_producto']; ?>
+<?php echo htmlspecialchars($fila['nombre_producto']); ?>
 </td>
 
 <td>
-<?php echo $fila['nombre_categoria']; ?>
+<?php echo htmlspecialchars($fila['nombre_categoria']); ?>
 </td>
 
 <td class="<?php echo $claseStock; ?>">
@@ -193,7 +231,7 @@ $<?php echo number_format($fila['precio'],2); ?>
 <!-- BOTÓN ELIMINAR -->
 <a href="eliminar_producto.php?id=<?php echo $fila['id']; ?>"
 class="btn-eliminar"
-onclick="return confirm('¿Estás seguro de eliminar el producto: <?php echo $fila['nombre_producto']; ?>?');">
+onclick="return confirm('¿Estás seguro de eliminar el producto: <?php echo htmlspecialchars($fila['nombre_producto']); ?>?');">
 🗑️ Eliminar
 </a>
 
@@ -212,7 +250,7 @@ onclick="return confirm('¿Estás seguro de eliminar el producto: <?php echo $fi
 <tr>
 
 <td colspan="6" style="text-align:center;">
-No hay productos registrados.
+No se encontraron productos coincidentes.
 </td>
 
 </tr>
