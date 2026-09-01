@@ -25,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt1->bind_param("iid", $proveedor_id, $usuario_id, $total_compra);
         $stmt1->execute();
 
-        // ¡CAPTURAMOS EL ID RECIÉN CREADO!
+        // CAPTURAMOS EL ID RECIÉN CREADO
         $id_nueva_compra = $conn->insert_id;
         $stmt1->close();
 
@@ -36,7 +36,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt2->execute();
         $stmt2->close();
 
-        // Redirigir al dashboard tras el éxito
+        // --- FASE 3: ACTUALIZAR EL INVENTARIO FÍSICO (Actualización Relativa) ---
+        // Le ordenamos a MySQL que sume la cantidad comprada al stock actual del producto
+        $sql_stock = "UPDATE productos SET stock = stock + ? WHERE id = ?";
+        $stmt3 = $conn->prepare($sql_stock);
+
+        // Pasamos la cantidad comprada y el id del producto (ambos enteros "ii")
+        $stmt3->bind_param("ii", $cantidad, $producto_id);
+        $stmt3->execute();
+        $stmt3->close();
+
+        // Redirigir con éxito al dashboard
         header("Location: dashboard.php");
         exit();
 
